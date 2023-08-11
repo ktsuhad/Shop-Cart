@@ -4,3 +4,7 @@ export interface userInterface {
     password: string;
     avatar?:string | null
   }
+
+export interface productInterface  {
+  
+}

@@ -3,7 +3,8 @@ import Loginpage from "../Pages/authentication/Loginpage";
 import SignupPage from "../Pages/authentication/SignupPage";
 import Homepage from "../Pages/User/Homepage";
 import Cart from "../Pages/User/Cart/Cart";
-import Checkout from "../Pages/Checkout/Checkout";
+import Checkout from "../Pages/User/Checkout/Checkout";
+import AdminHomePage from "../Pages/Admin/AdminHomePage";
 
 const UserRouter = () => {
     
@@ -15,6 +16,8 @@ const UserRouter = () => {
       <Route path="/" element={<Homepage/>} />
       <Route path="/cart" element={<Cart/>} />
       <Route path="/checkout" element={<Checkout/>} />
+      <Route path="/adminHomepage" element={<AdminHomePage/>} />
+
     </Routes>
   );
 };

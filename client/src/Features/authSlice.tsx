@@ -40,6 +40,10 @@ export const authSlice = createSlice({
     logout(state) {
       state.user = null;
       state.isAuthenticated = false;
+
+      // Remove the access token from localStorage
+      localStorage.removeItem("accessToken")
+
     },
   },
 });

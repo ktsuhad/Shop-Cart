@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../Model/userModel";
-import { userInterface } from "../interface/userInterface";
+import { userInterface } from "../interface/Interface";
 import { comparePassword, hashPassword } from "../Helpers/authHelper";
 import jwt from "jsonwebtoken";
 import fs from "fs";

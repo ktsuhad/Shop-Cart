@@ -13,6 +13,9 @@ import {
   Close,
 } from "@mui/icons-material";
 import {  Tooltip } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/Store/store";
+import { logout } from "../../Features/authSlice";
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
@@ -20,6 +23,9 @@ const Navbar = () => {
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
+
+  //dispatch
+  const dispatch:AppDispatch = useDispatch()
 
   return (
     <>
@@ -59,7 +65,7 @@ const Navbar = () => {
         <span className="flex items-center gap-3 order-2 md:order-4 relative">
           <button
             className="hover:bg-gray-200 hover:rounded-full w-10 h-10 flex items-center justify-center"
-            onBlur={() => setToggle(false)}
+            // onBlur={() => setToggle(false)}
             onFocus={() => setToggle(true)}
           >
             <Tooltip title="profile">
@@ -67,9 +73,9 @@ const Navbar = () => {
             </Tooltip>
           </button>
           {toggle && (
-            <div className="absolute top-12 -left-16 right-0  bg-gray-200 shadow-lg text-black  z-30 rounded-md overflow-hidden">
+            <div className="absolute top-12 -left-16 right-0   bg-gray-200 shadow-lg text-black  z-30 rounded-md overflow-hidden">
               <Link
-                to="/login"
+                to="/"
                 className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
               >
                 <span>
@@ -78,7 +84,7 @@ const Navbar = () => {
                 <p className="">Profile</p>
               </Link>
               <Link
-                to="/login"
+                to="/"
                 className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
               >
                 <span>
@@ -87,7 +93,7 @@ const Navbar = () => {
                 <p className="">My order</p>
               </Link>
               <Link
-                to="/login"
+                to="/"
                 className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
               >
                 <span>
@@ -96,7 +102,7 @@ const Navbar = () => {
                 <p className="">Wishlist</p>
               </Link>
               <Link
-                to="/login"
+                to="/"
                 className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
               >
                 <span>
@@ -111,7 +117,7 @@ const Navbar = () => {
                 <span>
                   <Logout />
                 </span>
-                <p className="">Logout</p>
+                <p className="" onClick={()=>dispatch(logout())}>Logout</p>
               </Link>
             </div>
           )}

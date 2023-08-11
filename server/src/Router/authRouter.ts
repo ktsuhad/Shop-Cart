@@ -9,4 +9,4 @@ app.post("/login",loginController);
 
 
 
-export const router = app
+export const authRouter = app
