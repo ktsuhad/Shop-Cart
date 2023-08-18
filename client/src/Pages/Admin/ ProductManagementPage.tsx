@@ -13,7 +13,7 @@ const ProductManagementPage = () => {
 
   const dispatch: AppDispatch = useDispatch(); //dispatch
   const { products } = useSelector((state: RootState) => state.products);
-  console.log(products);
+
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -23,6 +23,7 @@ const ProductManagementPage = () => {
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [editIndex, seteditIndex] = useState<number>(-1);
 
   //getting all products
   useEffect(() => {
@@ -47,18 +48,31 @@ const ProductManagementPage = () => {
         formData.append("image", image);
       }
 
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_SERVER}/create-product`,
-        formData
-      );
+      if (editIndex === -1) {
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_SERVER}/create-product`,
+          formData
+        );
 
-      if (data.success) {
-        toast.success(data.message);
+        if (data.success) {
+          dispatch(fetchProducts());
+          toast.success(data.message);
+          setAddToggle(false);
+        }
       } else {
-        toast.error("hhhh");
+        const { data } = await axios.put(
+          `${import.meta.env.VITE_SERVER}/update-product/${
+            products[editIndex]._id
+          }`,
+          formData
+        );
+        if (data.success) {
+          dispatch(fetchProducts());
+          toast.success(data.message);
+          seteditIndex(-1);
+        }
       }
-      console.log("sssss", data);
-
+      setAddToggle(false);
       // Reset the input fields after successful product creation
       setTitle("");
       setDescription("");
@@ -69,8 +83,41 @@ const ProductManagementPage = () => {
       setCategory("");
       setImage(null);
     } catch (error) {
-      console.error("Error creating product:", error);
+      toast.error("An error occurred while creating the product");
     }
+  };
+
+  //handleDelete
+  const handleDelete = async (productId: string) => {
+    try {
+      const { data } = await axios.delete(
+        `${import.meta.env.VITE_SERVER}/delete-product/${productId}`
+      );
+
+      if (data.success) {
+        dispatch(fetchProducts());
+        toast.success(data.message);
+      } else {
+        toast.error(data.message || "Failed to delete product");
+      }
+    } catch (error) {
+      toast.error("An error occurred while deleting the product");
+    }
+  };
+
+  //handleEdit
+  const handleEdit = (index: number) => {
+    seteditIndex(index);
+    setAddToggle(true); // input box is visible
+    const productToEdit = products[index];
+    setTitle(productToEdit.title);
+    setDescription(productToEdit.description);
+    setPrice(productToEdit.price);
+    setDiscountPercentage(productToEdit.discountPercentage);
+    setRating(productToEdit.rating);
+    setBrand(productToEdit.brand);
+    setCategory(productToEdit.category);
+    setImage(null); // Clear the image selection
   };
 
   return (
@@ -81,7 +128,18 @@ const ProductManagementPage = () => {
           <Button
             variant="contained"
             style={{ marginTop: 4 }}
-            onClick={() => setAddToggle(!addToggle)}
+            onClick={() => {
+              setAddToggle(!addToggle);
+              seteditIndex(-1);
+              setTitle(""); // Reset form fields
+              setDescription("");
+              setPrice(0);
+              setDiscountPercentage(0);
+              setRating(0);
+              setBrand("");
+              setCategory("");
+              setImage(null);
+            }}
           >
             <Add />
           </Button>
@@ -97,7 +155,9 @@ const ProductManagementPage = () => {
               : "hidden  right-[-100px] transition-all duration-1000"
           } absolute z-50 top-24 border p-10 bg-white rounded-md shadow-lg`}
         >
-          <h1 className="text-xl font-bold text-center pb-5">Add Product</h1>
+          <h1 className="text-xl font-bold text-center pb-5">
+            {editIndex !== -1 ? "Edit Product" : "Add Product"}
+          </h1>
           <table className="">
             <tbody>
               <tr>
@@ -208,19 +268,25 @@ const ProductManagementPage = () => {
             </tbody>
           </table>
           <div className=" w-full flex justify-center mt-6">
-            <Button variant="contained" color="primary" type="submit">
-              Submit
-            </Button>
+            {editIndex !== -1 ? (
+              <Button variant="contained" color="primary" type="submit">
+                Save
+              </Button>
+            ) : (
+              <Button variant="contained" color="primary" type="submit">
+                Submit
+              </Button>
+            )}
           </div>
         </form>
       )}
       <div>
-        {products?.map((product) => (
+        {products?.map((product: any, index: number) => (
           <div
             key={product._id}
             className="border-b py-4 flex items-center justify-between mt-4 rounded-md"
           >
-            <img src="" alt="d" />
+            <img src={product.image} alt="" className="w-20 h-20" />
             <span className="">
               <h1>{product.title}</h1>
               <p>{product.description}</p>
@@ -235,12 +301,21 @@ const ProductManagementPage = () => {
             </span>
             <span className="flex gap-2 px-2">
               <Tooltip title="edit">
-                <Button variant="contained" size="small">
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => handleEdit(index)}
+                >
                   <Edit />
                 </Button>
               </Tooltip>
               <Tooltip title="delete">
-                <Button variant="contained" size="small" color="error">
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="error"
+                  onClick={() => handleDelete(product._id)}
+                >
                   <Delete />
                 </Button>
               </Tooltip>

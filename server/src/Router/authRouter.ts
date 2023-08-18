@@ -8,5 +8,4 @@ app.post("/signup",upload.single("avatar"),signUpController);
 app.post("/login",loginController);
 
 
-
 export const authRouter = app

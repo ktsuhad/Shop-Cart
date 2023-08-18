@@ -1,5 +1,4 @@
 import Carousel from "../../components/Carousel/Carousel";
-// import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar/Navbar";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +22,6 @@ const Homepage = () => {
           <Navbar />
           <Carousel />
           <ProductsList/>
-          {/* <Footer/> */}
         </div>
       )}
     </>

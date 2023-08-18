@@ -41,6 +41,7 @@ const productSlice = createSlice({
 
 export const { fetchStart, fetchProductSuccess } = productSlice.actions;
 export default productSlice.reducer;
+
 //fetch all product Thunk action
 export const fetchProducts = (): AppThunk => async (dispatch) => {
   try {
@@ -51,3 +52,4 @@ export const fetchProducts = (): AppThunk => async (dispatch) => {
     console.log(error);
   }
 };
+
