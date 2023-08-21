@@ -3,6 +3,7 @@ export interface userInterface {
     email: string;
     password: string;
     avatar?:string | null
+    role?:string
   }
 
 export interface productInterface  {

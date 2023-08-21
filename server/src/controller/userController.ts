@@ -37,11 +37,6 @@ export const signUpController = async (req: Request, res: Response) => {
     //hash password
     const hashedPassword = await hashPassword(password);
 
-    // let role = "user";
-    // if (password === (process.env.SECRETE_KEY as string)) {
-    //   role = "admin";
-    // }
-
     const newUser = new userModel<userInterface>({
       name,
       email,
@@ -110,3 +105,46 @@ export const loginController = async (req: Request, res: Response) => {
 };
 
 // -----------------------------------------------------------------------------
+
+// getting all users
+export const alluserController = async (req:Request,res:Response)=>{
+  try {
+    const users = await userModel.find()
+    res.status(200).send({success:true,message:"all users getting successfull",users})
+    
+  } catch (error) {
+    res.status(500).send({ success: false, message: "error in getting all users" });
+  }
+}
+
+
+
+//deleteUserController
+export const deleteUserController = async (req:Request,res:Response)=>{
+  try {
+    const {userId} = req.params
+    const users = await userModel.findByIdAndDelete(userId)
+    res.status(200).send({success:true,message:`${users?.name} is deleted`,users})
+    
+  } catch (error) {
+    res.status(500).send({ success: false, message: "error in getting all users" });
+  }
+}
+
+
+//updateUserController
+export const updateUserController = async (req:Request,res:Response)=>{
+  try {
+    const {userId} = req.params
+    const { role } = req.body
+
+    const updatedUser = await userModel.findByIdAndUpdate(userId,{role},{new:true})
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, message: `${updatedUser.name}  is updated`, user: updatedUser });
+  } catch (error) {
+    res.status(500).send({ success: false, message: "error in getting all users" });
+  }
+}
