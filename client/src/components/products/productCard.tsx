@@ -28,7 +28,7 @@ const ProductCard = () => {
         <div key={product._id} className="w-64">
           <div className="w-64">
             <Link
-              to={`/productdetails/${product._id}`}
+              to={`/product-details/${product._id}`}
               className="bg-slate-100 w-full h-56 flex items-center justify-center rounded-md relative"
             >
               <img src={product.image} alt="" className="w-32 h-auto" />

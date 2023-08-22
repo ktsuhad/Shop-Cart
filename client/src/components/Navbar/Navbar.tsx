@@ -7,7 +7,6 @@ import {
   QuestionMark,
   Logout,
   ShoppingCart,
-  Search,
   Person,
   MenuOutlined,
   Close,
@@ -16,10 +15,10 @@ import {  Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/Store/store";
 import { logout } from "../../Features/authSlice";
+import Search from "../Search/Search";
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
@@ -51,15 +50,7 @@ const Navbar = () => {
         </div>
 
         {/* input section */}
-        <span className="order-3 flex items-center border rounded-full w-full md:w-max px-2 py-1 ">
-          <input
-            type="text"
-            placeholder="Search Product"
-            className="rounded-full outline-none text-base py-1 px-2 w-full md:w-auto"
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Search />
-        </span>
+        <Search/>
 
         {/* Buttons */}
         <span className="flex items-center gap-3 order-2 md:order-4 relative">

@@ -1,18 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk } from "../app/Store/store";
 import axios from "axios";
+import { product } from "../interfaces/productinterface";
 
-interface product{
-  _id:string
-    title:string,
-      description:string,
-      price:number,
-      discountPercentage:number,
-      rating:number,
-      brand:string,
-      category:string,
-      image:string
-}
 
 interface productState {
   products: product[];
@@ -52,4 +42,3 @@ export const fetchProducts = (): AppThunk => async (dispatch) => {
     console.log(error);
   }
 };
-

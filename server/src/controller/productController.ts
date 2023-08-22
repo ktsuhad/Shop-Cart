@@ -219,3 +219,29 @@ export const getAllproductController = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+
+//get single product 
+export const getSingleproduct = async (req:Request,res:Response)=>{
+  try {
+    const productId = req.params.productId    
+    const product =await productModel.findById(productId)
+    if(!product){
+      return res.status(404).send({
+        success: false,
+        message: "no product",
+      });
+    }
+    res.status(200).send({
+      success: true,
+      message: "got product",
+      product,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "error while in getting single product",
+    });
+  }
+}
