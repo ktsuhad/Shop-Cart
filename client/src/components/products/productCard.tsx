@@ -6,6 +6,8 @@ import { FavoriteBorderOutlined } from "@mui/icons-material";
 import { fetchProducts } from "../../Features/productSlice";
 import { AppDispatch, RootState } from "../../app/Store/store";
 import { Button } from "@mui/material";
+import { addTocart } from "../../Features/CartSlice";
+import { product } from "../../interfaces/productinterface";
 
 const ProductCard = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,12 +17,10 @@ const ProductCard = () => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  //handleSubmit
-  // const handleSubmit = (product) => {
-  //   dispatch(addToCart(product));
-  //   // console.log(product);
-  // };
-  // console.log(items);
+  // handleSubmit
+  const handleAddtoCart = (product: product) => {
+    dispatch(addTocart(product));
+  };
 
   return (
     <div className="flex items-center w-full flex-row overflow-y-auto gap-8  md:justify-start md:flex-wrap  md:gap-8">
@@ -54,6 +54,7 @@ const ProductCard = () => {
                   fullWidth
                   size="small"
                   style={{ backgroundColor: "green", marginTop: "5px" }}
+                  onClick={() => handleAddtoCart(product)}
                 >
                   Add to Cart
                 </Button>

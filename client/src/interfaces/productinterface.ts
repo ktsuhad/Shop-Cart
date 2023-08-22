@@ -8,4 +8,6 @@ export interface product {
   brand: string;
   category: string;
   image: string;
+  quantity:number;
+  totalPrice:number
 }

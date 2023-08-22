@@ -5,13 +5,16 @@ import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { Button } from "@mui/material";
 import { product } from "../../../interfaces/productinterface";
+import { AppDispatch } from "../../../app/Store/store";
+import { useDispatch } from "react-redux";
+import { addTocart } from "../../../Features/CartSlice";
 
 const ProductDetails = () => {
   const [product, setproduct] = useState<product>();
   const [selectedColor, setSelectedColor] = useState("gray");
   const { productId } = useParams(); //access params
 
-
+const dispatch:AppDispatch = useDispatch()
   useEffect(() => {
     const fetchSingleproduct = async () => {
       try {
@@ -29,7 +32,7 @@ const ProductDetails = () => {
   const handleColorButtonClick = (color: string) => {
     setSelectedColor(color);
   };
-  
+
   return (
     <div className="container mx-auto min-h-screen flex flex-col md:flex-row justify-center gap-5 md:py-12">
       <div className="flex-1">
@@ -67,7 +70,7 @@ const ProductDetails = () => {
           sx={{ mt: 4 }}
           color="info"
           fullWidth
-          // onClick={() => dispatch(addTocart(product as any))}
+          onClick={() => dispatch(addTocart(product as any))}
         >
           Add to cart
         </Button>
