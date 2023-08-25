@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 // import { toast } from "react-toastify";
@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { login } from "../../Features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/Store/store";
+import { AppDispatch, RootState } from "../../app/Store/store";
 
 interface LoginFormValues {
   email: string;
@@ -17,14 +17,18 @@ interface LoginFormValues {
 const Login: React.FC = () => {
   const [toggleVisible, settoggleVisible] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
-  const loading = useSelector((state: RootState) => state.auth.loading);
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
+  const { loading, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
   );
-  console.log(isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is Required"),
@@ -38,10 +42,6 @@ const Login: React.FC = () => {
       console.log(error);
     }
   };
-
-  if (isAuthenticated) {
-    navigate("/");
-  }
 
   return (
     <Formik

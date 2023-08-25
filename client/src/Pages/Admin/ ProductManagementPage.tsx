@@ -1,6 +1,7 @@
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Button, Tooltip } from "@mui/material";
 import axios from "axios";
+import axiosInstance from "../../Services/axiosInstance";
 import { FormEvent, useEffect, useState } from "react";
 import Dropzone from "react-dropzone"; //image uploader libery
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +14,6 @@ const ProductManagementPage = () => {
 
   const dispatch: AppDispatch = useDispatch(); //dispatch
   const { products } = useSelector((state: RootState) => state.products);
-
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -60,10 +60,8 @@ const ProductManagementPage = () => {
           setAddToggle(false);
         }
       } else {
-        const { data } = await axios.put(
-          `${import.meta.env.VITE_SERVER}/update-product/${
-            products[editIndex]._id
-          }`,
+        const { data } = await axiosInstance.put(
+          `/update-product/${products[editIndex]._id}`,
           formData
         );
         if (data.success) {
@@ -90,8 +88,8 @@ const ProductManagementPage = () => {
   //handleDelete
   const handleDelete = async (productId: string) => {
     try {
-      const { data } = await axios.delete(
-        `${import.meta.env.VITE_SERVER}/delete-product/${productId}`
+      const { data } = await axiosInstance.delete(
+        `/delete-product/${productId}`
       );
 
       if (data.success) {

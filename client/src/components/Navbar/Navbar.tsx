@@ -105,6 +105,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/login"
+                onClick={()=>dispatch(logout())}
                 className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
               >
                 <span>

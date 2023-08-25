@@ -7,7 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import axios from "axios";
+import axiosInstance from "../../Services/axiosInstance";
 import { useEffect, useState } from "react";
 import { UserInterface } from "../../interfaces/UserInterface";
 
@@ -19,8 +19,8 @@ const UserManagementPage = () => {
 
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_SERVER}/all-users`
+      const { data } = await axiosInstance.get(
+        `/all-users`
       );
       setUsers(data.users);
     } catch (error) {
@@ -39,8 +39,8 @@ const UserManagementPage = () => {
   //handleRolechange
   const handleRolechange = async (userId: string, role: string) => {
     try {
-      await axios.put(
-        `${import.meta.env.VITE_SERVER}/update-user-role/${userId}`,
+      await axiosInstance.put(
+        `/update-user-role/${userId}`,
         { role }
       );
       fetchUser();
@@ -52,8 +52,8 @@ const UserManagementPage = () => {
   //confirmDelete
   const confirmDelete = async (userId: string) => {
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_SERVER}/delete-user/${userId}`
+      await axiosInstance.delete(
+        `/delete-user/${userId}`
       );
 
       fetchUser();
@@ -107,7 +107,7 @@ const UserManagementPage = () => {
         <tbody>
           {filteredUsers.length === 0 ? (
             <tr className=" bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td colSpan={4} className="px-6 py-4 text-center">
+              <td colSpan={4} className="px-6 py-5 text-center">
                 No users found matching the search criteria.
               </td>
             </tr>
@@ -129,14 +129,21 @@ const UserManagementPage = () => {
                 </td>
                 <td
                   scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex items-center gap-3"
+                  className="px-6 py-5 font-medium text-gray-900 whitespace-nowrap dark:text-white flex items-center gap-3"
                 >
-                  <Avatar />
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      className="w-14 h-14 rounded-full object-cover"
+                    />
+                  ) : (
+                    <Avatar />
+                  )}
                   {user.name}
                 </td>
                 <td
                   scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  className="px-6 py-5 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
                   <span
                     className={`px-6 py-2 rounded-3xl ${
@@ -148,7 +155,7 @@ const UserManagementPage = () => {
                     {user.role}
                   </span>
                 </td>
-                <td className="px-6 py-4 space-x-6">
+                <td className="px-6 py-5 space-x-6">
                   <a href="#" className="space-x-1.5">
                     <Settings />
                     {/* <span className="text-xs">Modify UserRole</span> */}

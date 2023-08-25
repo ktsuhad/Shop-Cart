@@ -1,21 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../Services/axiosInstance";
 import { AppThunk } from "../app/Store/store";
+import { UserInterface } from "../interfaces/UserInterface";
 
 interface AuthState {
   loading: boolean;
   user: any;
   isAuthenticated: boolean;
 }
-
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  password: string;
-  avatar?: any;
-}
-
 const initialState: AuthState = {
   loading: false,
   user: null,
@@ -29,7 +21,7 @@ export const authSlice = createSlice({
     loginStart: (state) => {
       state.loading = true;
     },
-    loginSuccess(state, action: PayloadAction<User>) {
+    loginSuccess(state, action: PayloadAction<UserInterface>) {
       state.loading = false;
       state.user = action.payload;
       state.isAuthenticated = true;
@@ -42,8 +34,7 @@ export const authSlice = createSlice({
       state.isAuthenticated = false;
 
       // Remove the access token from localStorage
-      localStorage.removeItem("accessToken")
-
+      localStorage.removeItem("accessToken");
     },
   },
 });
@@ -58,15 +49,11 @@ export const login =
   async (dispatch) => {
     try {
       dispatch(loginStart());
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER}/login`,
-        formdata
-      );
-      const { data } = response;
+      const { data } = await axiosInstance.post(`/login`, formdata);
 
       if (data && data.success) {
         dispatch(loginSuccess(data.user));
-        // Save token in localStorage
+        // Save token and user data in localStorage
         localStorage.setItem("accessToken", data.accessToken);
       } else {
         dispatch(loginfailure());

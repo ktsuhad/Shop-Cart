@@ -3,14 +3,13 @@ import userModel from "../Model/userModel";
 import { userInterface } from "../interface/Interface";
 import { comparePassword, hashPassword } from "../Helpers/authHelper";
 import jwt from "jsonwebtoken";
-import fs from "fs";
+import { Cloud } from "../config/Cloudinary";
 
 //Register user
 export const signUpController = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
-
-    const avatarUrl = req.file ? req.file.path : null;
+    const avatar = req.file;
 
     if (!name || !email || !password) {
       res.status(400).send({ message: "all fields are required" });
@@ -21,17 +20,17 @@ export const signUpController = async (req: Request, res: Response) => {
 
     //if esists
     if (existingUser) {
-      const filename = req.file?.filename;
-      const filepath = `../uploads/${filename}`;
-      fs.unlink(filepath, (err) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send({ message: "error deleting file" });
-        } else {
-          res.status(500).send({ message: "file deleting succefully " });
-        }
-      });
       return res.status(409).send("User already exists");
+    }
+
+    let avatarUrl = ""; // Initialize avatarUrl variable
+
+    if (avatar) {
+      const imageStream = await Cloud.uploader.upload(avatar.path, {
+        folder: "profile-folder",
+        transformation: [{ width: 200, height: 200, crop: "fill" }],
+      });
+      avatarUrl = imageStream.secure_url;
     }
 
     //hash password
@@ -59,7 +58,6 @@ export const signUpController = async (req: Request, res: Response) => {
 export const loginController = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    // console.log(req.body);
 
     //validation
     if (!email || !password) {
@@ -97,7 +95,12 @@ export const loginController = async (req: Request, res: Response) => {
       success: true,
       message: "successfully loged in",
       accessToken,
-      user,
+      user: {
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role,
+      },
     });
   } catch (error) {
     res.status(500).send({ success: false, message: "error in login" });
@@ -107,44 +110,59 @@ export const loginController = async (req: Request, res: Response) => {
 // -----------------------------------------------------------------------------
 
 // getting all users
-export const alluserController = async (req:Request,res:Response)=>{
+export const alluserController = async (req: Request, res: Response) => {
   try {
-    const users = await userModel.find()
-    res.status(200).send({success:true,message:"all users getting successfull",users})
-    
+    const users = await userModel.find();
+    res
+      .status(200)
+      .send({ success: true, message: "all users getting successfull", users });
   } catch (error) {
-    res.status(500).send({ success: false, message: "error in getting all users" });
+    res
+      .status(500)
+      .send({ success: false, message: "error in getting all users" });
   }
-}
-
-
+};
 
 //deleteUserController
-export const deleteUserController = async (req:Request,res:Response)=>{
+export const deleteUserController = async (req: Request, res: Response) => {
   try {
-    const {userId} = req.params
-    const users = await userModel.findByIdAndDelete(userId)
-    res.status(200).send({success:true,message:`${users?.name} is deleted`,users})
-    
+    const { userId } = req.params;
+    const users = await userModel.findByIdAndDelete(userId);
+    res
+      .status(200)
+      .send({ success: true, message: `${users?.name} is deleted`, users });
   } catch (error) {
-    res.status(500).send({ success: false, message: "error in getting all users" });
+    res
+      .status(500)
+      .send({ success: false, message: "error in getting all users" });
   }
-}
-
+};
 
 //updateUserController
-export const updateUserController = async (req:Request,res:Response)=>{
+export const updateUserController = async (req: Request, res: Response) => {
   try {
-    const {userId} = req.params
-    const { role } = req.body
+    const { userId } = req.params;
+    const { role } = req.body;
 
-    const updatedUser = await userModel.findByIdAndUpdate(userId,{role},{new:true})
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      { role },
+      { new: true }
+    );
 
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
-    res.status(200).json({ success: true, message: `${updatedUser.name}  is updated`, user: updatedUser });
+    res.status(200).json({
+      success: true,
+      message: `${updatedUser.name}  is updated`,
+      user: updatedUser,
+    });
   } catch (error) {
-    res.status(500).send({ success: false, message: "error in getting all users" });
+    res
+      .status(500)
+      .send({ success: false, message: "error in getting all users" });
   }
-}
+};
