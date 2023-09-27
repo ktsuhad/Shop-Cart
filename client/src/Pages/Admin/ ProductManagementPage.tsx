@@ -1,5 +1,5 @@
 import { Add, Delete, Edit } from "@mui/icons-material";
-import { Button, Tooltip } from "@mui/material";
+import { Button, Tooltip, Modal, Typography } from "@mui/material";
 import axiosInstance from "../../api/BaseUrl/axiosInstance";
 import { FormEvent, useEffect, useState } from "react";
 import Dropzone from "react-dropzone"; //image uploader libery
@@ -12,15 +12,19 @@ import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 const ProductManagementPage = () => {
   const [addToggle, setAddToggle] = useState(false);
   const [Loading, setLoading] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false); // State for delete confirmation modal
+  const [productIdToDelete, setProductIdToDelete] = useState(""); // State to store the product ID to delete
 
   const dispatch: AppDispatch = useDispatch(); //dispatch
   const { products } = useSelector((state: RootState) => state.products);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<number>(0);
-  const [discountPercentage, setDiscountPercentage] = useState<number>(0);
-  const [rating, setRating] = useState<number>(0);
+  const [price, setPrice] = useState<number | null>(null);
+  const [discountPercentage, setDiscountPercentage] = useState<number | null>(
+    null
+  );
+  const [rating, setRating] = useState<number | null>(null);
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -34,7 +38,7 @@ const ProductManagementPage = () => {
   //HandleProductSubmit
   const HandleProductSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
 
     try {
       const formData = new FormData(); //formdata
@@ -76,17 +80,16 @@ const ProductManagementPage = () => {
       // Reset the input fields after successful product creation
       setTitle("");
       setDescription("");
-      setPrice(0);
-      setDiscountPercentage(0);
-      setRating(0);
+      setPrice(null);
+      setDiscountPercentage(null);
+      setRating(null);
       setBrand("");
       setCategory("");
       setImage(null);
     } catch (error) {
       toast.error("An error occurred while creating the product");
-    }
-    finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -123,6 +126,18 @@ const ProductManagementPage = () => {
     setImage(null); // Clear the image selection
   };
 
+  // Function to open the delete confirmation modal
+  const openDeleteModal = (productId: string) => {
+    setProductIdToDelete(productId);
+    setDeleteModalOpen(true);
+  };
+
+  // Function to close the delete confirmation modal
+  const closeDeleteModal = () => {
+    setProductIdToDelete("");
+    setDeleteModalOpen(false);
+  };
+
   return (
     <div className="relative">
       <div className="">
@@ -136,9 +151,9 @@ const ProductManagementPage = () => {
               seteditIndex(-1);
               setTitle(""); // Reset form fields
               setDescription("");
-              setPrice(0);
-              setDiscountPercentage(0);
-              setRating(0);
+              setPrice(null);
+              setDiscountPercentage(null);
+              setRating(null);
               setBrand("");
               setCategory("");
               setImage(null);
@@ -190,7 +205,7 @@ const ProductManagementPage = () => {
                 <td>
                   <input
                     type="number"
-                    value={price}
+                    value={price === null ? "" : price} // Convert null to an empty string for the input
                     className="bg-gray-200 rounded-sm focus:ring-2 focus:ring-blue-500 outline-none py-1 px-2"
                     onChange={(e) => setPrice(Number(e.target.value))}
                   />
@@ -201,7 +216,9 @@ const ProductManagementPage = () => {
                 <td>
                   <input
                     type="number"
-                    value={discountPercentage}
+                    value={
+                      discountPercentage === null ? "" : discountPercentage
+                    } // Convert null to an empty string for the input
                     className="bg-gray-200 rounded-sm focus:ring-2 focus:ring-blue-500 outline-none py-1 px-2"
                     onChange={(e) =>
                       setDiscountPercentage(Number(e.target.value))
@@ -214,7 +231,7 @@ const ProductManagementPage = () => {
                 <td>
                   <input
                     type="number"
-                    value={rating}
+                    value={rating === null ? "" : rating} // Convert null to an empty string for the input
                     className="bg-gray-200 rounded-sm focus:ring-2 focus:ring-blue-500 outline-none py-1 px-2"
                     onChange={(e) => setRating(Number(e.target.value))}
                   />
@@ -272,12 +289,33 @@ const ProductManagementPage = () => {
           </table>
           <div className=" w-full flex justify-center mt-6">
             {editIndex !== -1 ? (
-              <Button variant="contained" color="primary" type="submit" disabled={Loading} w-64 h-11>
-                {Loading ? <LoadingSpinner size={24} color ="secondary"/> :"Save"}
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                disabled={Loading}
+                w-64
+                h-11
+              >
+                {Loading ? (
+                  <LoadingSpinner size={24} color="secondary" />
+                ) : (
+                  "Save"
+                )}
               </Button>
             ) : (
-              <Button variant="contained" color="primary" type="submit" className="w-64 h-11" disabled={Loading}>
-                {Loading ? <LoadingSpinner size={24} color ="secondary"/> :"Submit"}
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                className="w-64 h-11"
+                disabled={Loading}
+              >
+                {Loading ? (
+                  <LoadingSpinner size={24} color="secondary" />
+                ) : (
+                  "Submit"
+                )}
               </Button>
             )}
           </div>
@@ -292,7 +330,7 @@ const ProductManagementPage = () => {
             <img src={product.image} alt="" className="w-20 h-20" />
             <span className="">
               <h1>{product.title}</h1>
-              <p>{product.description}</p>
+              <p className="overflow-hidden max-w-[200px] whitespace-nowrap overflow-ellipsis">{product.description}</p>
             </span>
             <span>
               <h3>{product.brand}</h3>
@@ -317,7 +355,7 @@ const ProductManagementPage = () => {
                   variant="contained"
                   size="small"
                   color="error"
-                  onClick={() => handleDelete(product._id)}
+                  onClick={() => openDeleteModal(product._id)} // Open the delete modal
                 >
                   <Delete />
                 </Button>
@@ -326,6 +364,39 @@ const ProductManagementPage = () => {
           </div>
         ))}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        open={deleteModalOpen}
+        onClose={closeDeleteModal}
+        aria-labelledby="delete-modal-title"
+        aria-describedby="delete-modal-description"
+        className="flex items-center justify-center" // Add these classes
+      >
+        {/* Modal content */}
+        <div className="bg-white p-6 w-96 rounded-lg shadow-lg">
+          <Typography variant="h6" id="delete-modal-title">
+            Confirm Deletion
+          </Typography>
+          <Typography variant="body1" id="delete-modal-description">
+            Are you sure you want to delete this product?
+          </Typography>
+          <div className="mt-4 flex justify-end">
+            <Button onClick={closeDeleteModal} color="primary" className="mr-2">
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                handleDelete(productIdToDelete);
+                closeDeleteModal();
+              }}
+              color="error"
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

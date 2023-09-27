@@ -29,9 +29,9 @@ const ProductCard = () => {
           <div className="w-64">
             <Link
               to={`/product-details/${product._id}`}
-              className="bg-slate-100 w-full h-56 flex items-center justify-center rounded-md relative"
+              className="bg-slate-100 w-full flex items-center justify-center rounded-md relative overflow-hidden"
             >
-              <img src={product.image} alt="" className="w-32 h-auto" />
+              <img src={product.image} alt="" className="w-full " />
               <span className="material-symbols-outlined text-sm absolute top-2 right-2 bg-white rounded-full hover:bg-teal-500 hover:text-white flex px-2 py-1.5">
                 <FavoriteBorderOutlined />
               </span>

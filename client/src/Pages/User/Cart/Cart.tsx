@@ -56,19 +56,17 @@ const Cart = () => {
                   </button>
                 </td>
                 <td className="text-start py-3">
-                  <span className="text-green-800">{Math.round(11)}% off</span>
+                  <span className="text-green-800">0% off</span>
                   <span className="block">
                     ₹
-                    {Math.round(
-                      (product.price * product.discountPercentage) / 100
-                    )}
+                    0
                   </span>
                 </td>
                 <td className="text-start py-3 ">
                   <span className="line-through text-red-500">
-                    ₹{totalpriceWithoutDiscount}
+                    ₹{product.totalPrice}
                   </span>
-                  <span className="block text-green-700">₹{totalPrice}</span>
+                  <span className="block text-green-700">₹{product.totalPrice}</span>
                 </td>
               </tr>
             ))}

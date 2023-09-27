@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import productModel from "../Model/productModel";
 import { Cloud } from "../config/Cloudinary";
-import path from "path";
-import fs from "fs";
 
 //create product
 export const productController = async (req: Request, res: Response) => {
@@ -98,16 +96,6 @@ export const deleteProductController = async (req: Request, res: Response) => {
         deleteProduct.image.lastIndexOf(".")
       );
       await Cloud.uploader.destroy(publicId);
-    }
-
-    // Delete the local image file
-    if (deleteProduct.image) {
-      const imagePath = path.join(
-        __dirname,
-        "../../public/uploads",
-        deleteProduct.image
-      );
-      fs.unlinkSync(imagePath);
     }
 
     res.status(200).send({
