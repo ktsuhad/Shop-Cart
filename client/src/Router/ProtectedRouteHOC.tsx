@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import Axiosinstance from "../Services/axiosInstance";
+import Axiosinstance from "../api/BaseUrl/axiosInstance";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 
 const PrivateAdminRoute = () => {

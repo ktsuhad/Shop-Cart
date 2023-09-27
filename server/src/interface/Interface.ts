@@ -1,3 +1,5 @@
+import { Schema } from "mongoose";
+
 export interface userInterface {
     name: string;
     email: string;
@@ -16,4 +18,16 @@ export interface productInterface  {
   brand: string;
   category: string;
   image: string;
+}
+
+//cartproduct
+export interface CartProduct {
+  product: Schema.Types.ObjectId;
+  quantity: number;
+}
+
+//cart
+export interface Cart {
+  user: Schema.Types.ObjectId;
+  products: CartProduct[];
 }

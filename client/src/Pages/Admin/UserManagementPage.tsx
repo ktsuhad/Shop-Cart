@@ -7,7 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import axiosInstance from "../../Services/axiosInstance";
+import axiosInstance from "../../api/BaseUrl/axiosInstance";
 import { useEffect, useState } from "react";
 import { UserInterface } from "../../interfaces/UserInterface";
 

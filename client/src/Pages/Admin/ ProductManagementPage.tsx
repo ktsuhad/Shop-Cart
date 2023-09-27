@@ -1,16 +1,17 @@
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Button, Tooltip } from "@mui/material";
-import axios from "axios";
-import axiosInstance from "../../Services/axiosInstance";
+import axiosInstance from "../../api/BaseUrl/axiosInstance";
 import { FormEvent, useEffect, useState } from "react";
 import Dropzone from "react-dropzone"; //image uploader libery
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { fetchProducts } from "../../Features/productSlice";
 import { AppDispatch, RootState } from "../../app/Store/store";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 const ProductManagementPage = () => {
   const [addToggle, setAddToggle] = useState(false);
+  const [Loading, setLoading] = useState(false);
 
   const dispatch: AppDispatch = useDispatch(); //dispatch
   const { products } = useSelector((state: RootState) => state.products);
@@ -33,6 +34,7 @@ const ProductManagementPage = () => {
   //HandleProductSubmit
   const HandleProductSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true)
 
     try {
       const formData = new FormData(); //formdata
@@ -49,7 +51,7 @@ const ProductManagementPage = () => {
       }
 
       if (editIndex === -1) {
-        const { data } = await axios.post(
+        const { data } = await axiosInstance.post(
           `${import.meta.env.VITE_SERVER}/create-product`,
           formData
         );
@@ -82,6 +84,9 @@ const ProductManagementPage = () => {
       setImage(null);
     } catch (error) {
       toast.error("An error occurred while creating the product");
+    }
+    finally{
+      setLoading(false)
     }
   };
 
@@ -151,7 +156,7 @@ const ProductManagementPage = () => {
             addToggle
               ? "opacity-100  right-[50%] transition-all duration-1000 "
               : "hidden  right-[-100px] transition-all duration-1000"
-          } absolute z-50 top-24 border p-10 bg-white rounded-md shadow-lg`}
+          } absolute z-50 top-24 border p-10 bg-white text-black rounded-md shadow-lg`}
         >
           <h1 className="text-xl font-bold text-center pb-5">
             {editIndex !== -1 ? "Edit Product" : "Add Product"}
@@ -267,12 +272,12 @@ const ProductManagementPage = () => {
           </table>
           <div className=" w-full flex justify-center mt-6">
             {editIndex !== -1 ? (
-              <Button variant="contained" color="primary" type="submit">
-                Save
+              <Button variant="contained" color="primary" type="submit" disabled={Loading} w-64 h-11>
+                {Loading ? <LoadingSpinner size={24} color ="secondary"/> :"Save"}
               </Button>
             ) : (
-              <Button variant="contained" color="primary" type="submit">
-                Submit
+              <Button variant="contained" color="primary" type="submit" className="w-64 h-11" disabled={Loading}>
+                {Loading ? <LoadingSpinner size={24} color ="secondary"/> :"Submit"}
               </Button>
             )}
           </div>

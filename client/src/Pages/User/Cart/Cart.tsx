@@ -1,22 +1,22 @@
-import { Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { AppDispatch, RootState } from "../../../app/Store/store";
-import {
-  decrementQuantity,
-  incrementQuantity,
-} from "../../../Features/CartSlice";
+
+import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
+import { decrementQuantity, incrementQuantity } from "../../../Features/CartSlice";
 
 const Cart = () => {
-  const dispatch: AppDispatch = useDispatch();
-
-  const { items, totalPrice, totalDiscount } = useSelector(
+  const dispatch = useDispatch<AppDispatch>();
+  const { items, totalPrice } = useSelector(
     (state: RootState) => state.cart
   );
-  const totalpriceWithoutDiscount = items.reduce(
+
+  const totalpriceWithoutDiscount: number = items.reduce(
     (acc, product) => acc + product.totalPrice,
     0
   );
+
+
   return (
     <div className="flex flex-col md:flex-row container mx-auto py-5 h-screen">
       <div className="flex-[3] p-5">
@@ -28,17 +28,18 @@ const Cart = () => {
               <th className="text-start">Product</th>
               <th className="text-start">Price</th>
               <th className="text-start">Quantity</th>
+              <th className="text-start">Discount</th>
               <th className="text-start">Subtotal</th>
             </tr>
           </thead>
           <tbody>
             {items?.map((product) => (
-              <tr className="border-b ">
+              <tr key={product._id} className="border-b ">
                 <td className="py-3 flex items-center justify-center">
-                  <img src={product.image} className="w-20 h-20" />
+                  <img src={product.image} className="w-20 h-20" alt={product.title} />
                 </td>
                 <td className="text-start py-3 ">{product.title}</td>
-                <td className="text-start py-3 ">{product.price}</td>
+                <td className="text-start py-3 ">₹{product.price}</td>
                 <td className="text-start py-3 text-white rounded-md ">
                   <button
                     className="bg-blue-600 px-2"
@@ -54,14 +55,20 @@ const Cart = () => {
                     +
                   </button>
                 </td>
-                <td className="text-start py-3 ">{100}</td>
                 <td className="text-start py-3">
                   <span className="text-green-800">{Math.round(11)}% off</span>
                   <span className="block">
+                    ₹
                     {Math.round(
                       (product.price * product.discountPercentage) / 100
                     )}
                   </span>
+                </td>
+                <td className="text-start py-3 ">
+                  <span className="line-through text-red-500">
+                    ₹{totalpriceWithoutDiscount}
+                  </span>
+                  <span className="block text-green-700">₹{totalPrice}</span>
                 </td>
               </tr>
             ))}
@@ -74,29 +81,29 @@ const Cart = () => {
         <h1 className="py-5 font-bold">Price Details</h1>
         <ul>
           <li className="flex justify-between">
-            Price({items.length})<span>${totalpriceWithoutDiscount}</span>
+            Price({items.length})<span>₹{totalpriceWithoutDiscount}</span>
           </li>
 
           <li className="flex justify-between ">
-            Discount
-            <span className="text-green-600">{totalDiscount}</span>
+            Subtotal {/* Changed to Subtotal */}
+            <span className="text-green-600">₹{totalPrice}</span>
           </li>
           <li className="flex justify-between border-b border-dashed pb-2">
-            Delivery
-            <span className="text-green-600">FREE Delivery</span>
+            Discount {/* Changed to Discount */}
+            <span className="text-green-600">₹{0}</span>
           </li>
           <li className="flex justify-between pt-5 font-bold">
             Total Amount
-            <span>{totalPrice}</span>
+            <span>₹{totalPrice}</span>
           </li>
           <li className="text-green-600 py-5">
-            You will save ${totalDiscount} on this order
+            You will save ₹{0} on this order
           </li>
         </ul>
         <div className=" bg-white flex border-y border-x-0 py-5 border-gray-300 mb-20">
           <div className="flex-1  flex flex-col justify-center gap-2">
-            <p className="font-semibold tracking-wide">{totalPrice}</p>
-            <a href="" className="text-xs text-blue-700">
+            <p className="font-semibold tracking-wide">₹{totalPrice}</p>
+            <a href="#" className="text-xs text-blue-700">
               View Price details
             </a>
           </div>
@@ -106,11 +113,15 @@ const Cart = () => {
             </button>
           </div>
         </div>
-        {/* //payment checkout */}
-        <Link to={"/checkout"} className="flex justify-center">
-          <Button variant="contained" style={{ backgroundColor: "green" }}>
-            Checkout
-          </Button>
+
+        <Link to={"/checkout"}>
+          {!items.length ? (
+            <span className="text-red-600 font-medium tracking-wide text-base">
+              Please add items to your cart
+            </span>
+          ) : (
+            <Button variant="contained">Checkout</Button>
+          )}
         </Link>
       </div>
     </div>

@@ -14,13 +14,9 @@ const AdminHomePage = () => {
     setSelectedItem(item);
   };
 
-
   const handleSidebarToggle = () => {
-    setSidebarOpen(!sidebarOpen);
-
-    
+    setSidebarOpen(!sidebarOpen);    
   };
-
 
   const selectedComponent = () => {
     switch (selectedItem) {
@@ -30,7 +26,7 @@ const AdminHomePage = () => {
         return <UserManagementPage />;
       case "products":
         return <ProductManagementPage />;
-      case "order":
+      case "orders":
         return <OrderManagementPage />;
       case "settings":
         return <SettingsPage />;
@@ -40,13 +36,13 @@ const AdminHomePage = () => {
     }
   };
 
-  
   return (
-    <div className="container mx-auto flex h-[100vh]">
-      <div className={`flex-1 bg-black/75 text-white  ${sidebarOpen?"block" :"hidden md:block" }`}>
+   <div className="bg-black text-white">
+     <div className="container mx-auto flex h-[100vh]">
+      <div className={`flex-1 bg-slate-900 text-white border-l-[20px] border-l-teal-900 ${sidebarOpen?"block" :"hidden md:block" }`}>
         <Sidebar onItemClick={handleItemClick} />
       </div>
-      <div className={`${sidebarOpen ? 'flex-[4]' : 'flex-1'} md:flex-[4] bg-slate-100 transition-all duration-500 py-5 px-2`}>
+      <div className={`${sidebarOpen ? 'flex-[4]' : 'flex-1'} md:flex-[4] transition-all duration-500 py-5 px-5`}>
       <button
           className="md:hidden text-white hover:bg-gray-400  rounded-sm hover:text-white"
           onClick={handleSidebarToggle}
@@ -57,6 +53,7 @@ const AdminHomePage = () => {
         </button>
         {selectedComponent()}</div>
     </div>
+   </div>
   );
 };
 

@@ -3,6 +3,7 @@ import Carousel from "../../components/Carousel/Carousel";
 import Navbar from "../../components/Navbar/Navbar";
 import ProductsList from "../../components/products/ProductListing";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
 
 const Homepage = () => {
   // const accessToken = localStorage.getItem("accessToken");
@@ -18,6 +19,7 @@ const Homepage = () => {
         <Navbar />
         <Carousel />
         <ProductsList />
+        <Footer/>
       </div>
     </>
   );

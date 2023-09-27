@@ -5,7 +5,7 @@ import {
   LocalMall,
   Settings,
 } from "@mui/icons-material";
-import React from "react";
+import React from "react"; 
 
 interface SidebarProps {
   onItemClick:(item:string)=>void

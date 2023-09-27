@@ -6,8 +6,7 @@ import { FavoriteBorderOutlined } from "@mui/icons-material";
 import { fetchProducts } from "../../Features/productSlice";
 import { AppDispatch, RootState } from "../../app/Store/store";
 import { Button } from "@mui/material";
-import { addTocart } from "../../Features/CartSlice";
-import { product } from "../../interfaces/productinterface";
+import { addToCart } from "../../Features/CartSlice";
 
 const ProductCard = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,8 +17,9 @@ const ProductCard = () => {
   }, [dispatch]);
 
   // handleSubmit
-  const handleAddtoCart = (product: product) => {
-    dispatch(addTocart(product));
+  const handleAddToCart = (product: any) => {
+    dispatch(addToCart(product));
+    console.log("Item added to cart:", product);
   };
 
   return (
@@ -54,7 +54,7 @@ const ProductCard = () => {
                   fullWidth
                   size="small"
                   style={{ backgroundColor: "green", marginTop: "5px" }}
-                  onClick={() => handleAddtoCart(product)}
+                  onClick={() => handleAddToCart(product)}
                 >
                   Add to Cart
                 </Button>

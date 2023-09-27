@@ -1,4 +1,4 @@
-import axios from "axios";
+ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Zoom from "react-medium-image-zoom";
@@ -7,14 +7,15 @@ import { Button } from "@mui/material";
 import { product } from "../../../interfaces/productinterface";
 import { AppDispatch } from "../../../app/Store/store";
 import { useDispatch } from "react-redux";
-import { addTocart } from "../../../Features/CartSlice";
+import { addToCart } from "../../../Features/CartSlice";
 
 const ProductDetails = () => {
   const [product, setproduct] = useState<product>();
   const [selectedColor, setSelectedColor] = useState("gray");
   const { productId } = useParams(); //access params
 
-const dispatch:AppDispatch = useDispatch()
+  const dispatch: AppDispatch = useDispatch();
+
   useEffect(() => {
     const fetchSingleproduct = async () => {
       try {
@@ -70,7 +71,7 @@ const dispatch:AppDispatch = useDispatch()
           sx={{ mt: 4 }}
           color="info"
           fullWidth
-          onClick={() => dispatch(addTocart(product as any))}
+          onClick={() => dispatch(addToCart(product as any))}
         >
           Add to cart
         </Button>

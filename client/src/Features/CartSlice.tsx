@@ -1,48 +1,49 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { product } from "../interfaces/productinterface";
 
 interface CartState {
   items: product[];
   totalPrice: number;
-  totalDiscount: number;
 }
 
-//initial state
-const initialState: CartState = {
-  items: [],
-  totalPrice: 0,
-  totalDiscount: 0,
+// Load cart state from local storage
+const loadCartFromStorage = (): CartState => {
+  const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+  const totalPrice = parseFloat(localStorage.getItem("totalPrice") || "0");
+
+  return {
+    items: cartItems,
+    totalPrice,
+  };
 };
+
+const initialState: CartState = loadCartFromStorage();
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    //add to cart
-    addTocart: (state, action: PayloadAction<product>) => {
-      const product = action.payload;
-      const existingItem = state.items.find((item) => item._id === product._id);
+    addToCart: (state, action: PayloadAction<product>) => {
+      const newProduct = action.payload;
+      const existingItemIndex = state.items.findIndex((item) => item._id === newProduct._id);
 
-      if (existingItem) {
-        existingItem.quantity++;
-        existingItem.totalPrice += product.price;
+      if (existingItemIndex !== -1) {
+        state.items[existingItemIndex].quantity++;
+        state.items[existingItemIndex].totalPrice += newProduct.price;
       } else {
         state.items.push({
-          ...product,
+          ...newProduct,
           quantity: 1,
-          totalPrice: product.price,
+          totalPrice: newProduct.price,
         });
       }
-      state.totalPrice += product.price;
+      state.totalPrice += newProduct.price;
 
-      const productDiscount = Math.round(
-        (product.price * product.discountPercentage) / 100
-      );
-      state.totalDiscount += productDiscount;
-      state.totalPrice -= productDiscount;
+      // Save the updated cart state to localStorage
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
+      localStorage.setItem("totalPrice", state.totalPrice.toString());
     },
 
-    //increment Quantity
     incrementQuantity: (state, action: PayloadAction<string>) => {
       const productId = action.payload;
       const product = state.items.find((item) => item._id === productId);
@@ -51,46 +52,37 @@ const cartSlice = createSlice({
         product.quantity++;
         product.totalPrice += product.price;
         state.totalPrice += product.price;
-
-        const productDiscount = Math.round(
-          (product.price * product.discountPercentage) / 100
-        );
-        state.totalDiscount += productDiscount;
-        state.totalPrice -= productDiscount;
       }
+
+      // Update the local storage
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
+      localStorage.setItem("totalPrice", state.totalPrice.toString());
     },
 
-    //decrementQuantity
     decrementQuantity: (state, action: PayloadAction<string>) => {
       const productId = action.payload;
-      const product = state.items.find((item) => item._id === productId);
+      const productIndex = state.items.findIndex((item) => item._id === productId);
 
-      if (product) {
+      if (productIndex !== -1) {
+        const product = state.items[productIndex];
+
         if (product.quantity > 1) {
           product.quantity--;
           product.totalPrice -= product.price;
           state.totalPrice -= product.price;
-
-          const productDiscount = Math.round(
-            (product.price * product.discountPercentage) / 100
-          );
-          state.totalDiscount -= productDiscount;
-          state.totalPrice += productDiscount;
         } else {
           // Remove the item from the cart if the quantity is 1 or less
-          state.items = state.items.filter((item) => item._id !== productId);
+          state.items.splice(productIndex, 1);
           state.totalPrice -= product.totalPrice;
-
-          const productDiscount = Math.round(
-            (product.price * product.discountPercentage) / 100
-          );
-          state.totalDiscount -= productDiscount;
-          state.totalPrice += productDiscount;
         }
+
+        // Update the local storage
+        localStorage.setItem("cartItems", JSON.stringify(state.items));
+        localStorage.setItem("totalPrice", state.totalPrice.toString());
       }
     },
   },
 });
 
-export const { addTocart,incrementQuantity ,decrementQuantity } = cartSlice.actions;
+export const { addToCart, incrementQuantity, decrementQuantity } = cartSlice.actions;
 export default cartSlice.reducer;

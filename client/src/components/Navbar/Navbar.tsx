@@ -10,6 +10,7 @@ import {
   Person,
   MenuOutlined,
   Close,
+  LoginOutlined,
 } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,13 +20,13 @@ import Search from "../Search/Search";
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
-  const toggleMenu = () => {
-    setMenuOpen(!isMenuOpen);
-  };
+  // const toggleMenu = () => {
+  //   setMenuOpen(!isMenuOpen);
+  // };
 
   //dispatch
   const dispatch: AppDispatch = useDispatch();
-
+  const { user } = useSelector((state: RootState) => state.auth);
   const { items } = useSelector((state: RootState) => state.cart);
 
   return (
@@ -58,17 +59,25 @@ const Navbar = () => {
         <span className="flex items-center gap-3 order-2 md:order-4 relative">
           <button
             className="hover:bg-gray-200 hover:rounded-full w-10 h-10 flex items-center justify-center"
+            onClick={() => setToggle(!toggle)}
             // onBlur={() => setToggle(false)}
-            onFocus={() => setToggle(true)}
           >
             <Tooltip title="profile">
-              <Person />
+              {user && user.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt=""
+                  className="w-10 h-10 object-cover rounded-full bg-slate-300"
+                />
+              ) : (
+                <Person />
+              )}
             </Tooltip>
           </button>
           {toggle && (
             <div className="absolute top-12 -left-16 right-0   bg-gray-200 shadow-lg text-black  z-30 rounded-md overflow-hidden">
               <Link
-                to="/"
+                to="/profile"
                 className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
               >
                 <span>
@@ -103,18 +112,30 @@ const Navbar = () => {
                 </span>
                 <p className="">Help</p>
               </Link>
-              <Link
-                to="/login"
-                onClick={()=>dispatch(logout())}
-                className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
-              >
-                <span>
-                  <Logout />
-                </span>
-                <p className="" onClick={() => dispatch(logout())}>
-                  Logout
-                </p>
-              </Link>
+              {user ? (
+                <Link
+                  to="/login"
+                  onClick={() => {
+                    dispatch(logout());
+                  }}
+                  className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
+                >
+                  <span>
+                    <Logout />
+                  </span>
+                  <p className="">Logout</p>
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
+                >
+                  <span>
+                    <LoginOutlined />
+                  </span>
+                  <p className="">Login</p>
+                </Link>
+              )}
             </div>
           )}
           <Link to="/cart">

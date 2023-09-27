@@ -1,17 +1,15 @@
-import { ColorRing } from "react-loader-spinner";
+import React from "react";
+import { CircularProgress } from "@mui/material";
 
-const LoadingSpinner = () => {
+interface LoadingSpinnerProps {
+  size?: number;
+  color?: "primary" | "secondary" | "error" | "info" | "success" | "warning";
+}
+
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 24, color = "primary" }) => {
   return (
-    <div className="flex  justify-center items-center h-screen">
-      <ColorRing
-        visible={true}
-        height="80"
-        width="80"
-        ariaLabel="blocks-loading"
-        wrapperStyle={{}}
-        wrapperClass="blocks-wrapper"
-        colors={["#", "#f47e60", "#fe15b648b26a", "#abbd81", "#849b87"]}
-      />
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+      <CircularProgress size={size} color={color} />
     </div>
   );
 };

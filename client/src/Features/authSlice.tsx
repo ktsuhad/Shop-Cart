@@ -1,16 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import axiosInstance from "../Services/axiosInstance";
+import axiosInstance from "../api/BaseUrl/axiosInstance";
 import { AppThunk } from "../app/Store/store";
 import { UserInterface } from "../interfaces/UserInterface";
 
 interface AuthState {
   loading: boolean;
-  user: any;
+  user: UserInterface | null;
   isAuthenticated: boolean;
 }
+const storedUser = localStorage.getItem("user")
 const initialState: AuthState = {
   loading: false,
-  user: null,
+  user: storedUser ? JSON.parse(storedUser) : null,
   isAuthenticated: false,
 };
 
@@ -25,6 +26,8 @@ export const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload;
       state.isAuthenticated = true;
+
+      localStorage.setItem("user",JSON.stringify(action.payload))
     },
     loginfailure(state) {
       state.loading = true;
@@ -35,6 +38,7 @@ export const authSlice = createSlice({
 
       // Remove the access token from localStorage
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("user")
     },
   },
 });
