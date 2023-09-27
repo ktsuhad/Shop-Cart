@@ -21,6 +21,7 @@ const ProductCard = () => {
     dispatch(addToCart(product));
     console.log("Item added to cart:", product);
   };
+  
 
   return (
     <div className="flex items-center w-full flex-row overflow-y-auto gap-8  md:justify-start md:flex-wrap  md:gap-8">
