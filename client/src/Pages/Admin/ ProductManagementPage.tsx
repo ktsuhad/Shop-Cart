@@ -321,7 +321,7 @@ const ProductManagementPage = () => {
           </div>
         </form>
       )}
-      <div>
+      <div className="h-screen overflow-y-auto pr-20">
         {products?.map((product: any, index: number) => (
           <div
             key={product._id}

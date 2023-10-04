@@ -17,6 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/Store/store";
 import { logout } from "../../Features/authSlice";
 import Search from "../Search/Search";
+import "./Navbar.scss";
+
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
@@ -38,16 +40,16 @@ const Navbar = () => {
 
         {/* features */}
         <div className="order-2 hidden md:flex gap-4 shrink-0">
-          <a href="/" className="hover:bg-gray-200 hover:text-black">
+          <a href="/" className="menu-link">
             Categories
           </a>
-          <a href="/" className="hover:bg-gray-200 hover:text-black">
+          <a href="/" className="menu-link">
             Deals
           </a>
-          <a href="/" className="hover:bg-gray-200 hover:text-black">
+          <a href="/" className="menu-link">
             Whats new
           </a>
-          <a href="/" className="hover:bg-gray-200 hover:text-black">
+          <a href="/" className="menu-link">
             Delivery
           </a>
         </div>
@@ -86,7 +88,7 @@ const Navbar = () => {
                 <p className="">Profile</p>
               </Link>
               <Link
-                to="/"
+                to="/my-orders"
                 className="flex items-center gap-4 cursor-pointer  hover:bg-gray-700 hover:text-white px-2 py-2 z-30"
               >
                 <span>
@@ -166,25 +168,25 @@ const Navbar = () => {
           <div className="bg-black fixed top-0 bottom-0 left-0 right-32 z-50 text-white flex flex-col gap-3">
             <a
               href="/"
-              className="hover:bg-gray-200 hover:text-black focus:bg-white px-3 py-3 mt-11"
+              className="menu-link focus:bg-white px-3 py-3 mt-11"
             >
               Categories
             </a>
             <a
               href="/"
-              className="hover:bg-gray-200 hover:text-black focus:bg-white px-3 py-3"
+              className="menu-link focus:bg-white px-3 py-3"
             >
               Deals
             </a>
             <a
               href="/"
-              className="hover:bg-gray-200 hover:text-black focus:bg-white px-3 py-3"
+              className="menu-link focus:bg-white px-3 py-3"
             >
               Whats new
             </a>
             <a
               href="/"
-              className="hover:bg-gray-200 hover:text-black focus:bg-white px-3 py-3"
+              className="menu-link focus:bg-white px-3 py-3"
             >
               Delivery
             </a>

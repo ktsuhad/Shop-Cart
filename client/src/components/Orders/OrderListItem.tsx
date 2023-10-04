@@ -1,28 +1,26 @@
 import React from "react";
 import { OrderInteface } from "../../interfaces/OrderInterface";
-import dayjs from "dayjs";
+import dayjs from "dayjs"; 
 
 interface OrderListItemProps {
   orders: OrderInteface[];
   handleStatusChange: (orderId: string, newStatus: string) => void;
 }
 
-const OrderListItem: React.FC<OrderListItemProps> = ({
-  orders,
-  handleStatusChange,
-}) => {
+
+const OrderListItem: React.FC<OrderListItemProps> = ({orders,handleStatusChange,}) => {
   const statusOptions = ["Pending", "Processing", "Shipped", "Delivered"];
   
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Pending":
-        return "bg-yellow-500 text-sm font-bold";
+      case "pending":
+        return "bg-yellow-500 text-black text-sm font-bold";
       case "Processing":
-        return "bg-blue-500 text-sm font-bold";
+        return "bg-blue-500 text-black text-sm font-bold";
       case "Shipped":
-        return "bg-green-500 text-sm font-bold";
+        return "bg-green-500 text-black text-sm font-bold";
       case "Delivered":
-        return "bg-purple-500 text-sm font-bold";
+        return "bg-purple-500 text-black text-sm font-bold";
       default:
         return ""; // You can specify a default color or class here
     }
@@ -48,7 +46,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({
     <div className="mt-3">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-md overflow-hidden">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr className="bg-gray-800 text-white text-sm">
+              <tr className="bg-gray-800 text-white text-sm">
               <th scope="col" className="px-6 py-3">NAME</th>
               <th scope="col" className="px-6 py-3">Order No</th>
               <th scope="col" className="px-6 py-3">Transaction</th>
@@ -57,6 +55,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({
             </tr>
           </thead>
           <tbody>
+            
             {orders.map((order) => (
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
               <td className="px-6 py-4 text-base font-bold">{order.address.firstName} {order.address.lastName}</td>
@@ -66,7 +65,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({
                 <select
                   value={order.status}
                   onChange={(event) => handleStatusChange(order._id, event.target.value)}
-                  className={`outline-none text-white p-2 rounded-md overflow-hidden ${getStatusColor(order.status)}`}
+                  className={`outline-none  p-2 rounded-md overflow-hidden ${getStatusColor(order.status)}`}
                   >
                   {statusOptions.map((option, index) => (
                     <option key={index} value={option} >

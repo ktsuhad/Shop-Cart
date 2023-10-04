@@ -1,6 +1,6 @@
 import { Router } from "express";
 import upload from "../middleware/Multer";
-import { UpdateproductController, deleteProductController, getAllproductController, getSingleproduct, productController } from "../controller/productController";
+import { SearchController, UpdateproductController, deleteProductController, getAllproductController, getSingleproduct, productController } from "../controller/productController";
 import { isadmin, requireSignin } from "../middleware/authMiddleware";
 
 const app = Router();
@@ -11,5 +11,6 @@ app.get("/products", getAllproductController);
 app.delete("/delete-product/:productId", requireSignin,isadmin, deleteProductController);
 app.put("/update-product/:productId", requireSignin,isadmin, upload.single('image'), UpdateproductController);
 app.get("/product/:productId", getSingleproduct);
+app.get("/serach-suggestions",SearchController)
 
 export const productRouter = app;

@@ -24,4 +24,6 @@ export interface OrderInteface {
   interface Product {
     quantity: number;
     _id: string;
+    image:string,
+    title:string
   }

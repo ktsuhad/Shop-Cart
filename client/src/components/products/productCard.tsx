@@ -24,7 +24,7 @@ const ProductCard = () => {
   
 
   return (
-    <div className="flex items-center w-full flex-row overflow-y-auto gap-8  md:justify-start md:flex-wrap  md:gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm: justify-items-center md:justify-items-start">
       {products?.map((product) => (
         <div key={product._id} className="w-64">
           <div className="w-64">

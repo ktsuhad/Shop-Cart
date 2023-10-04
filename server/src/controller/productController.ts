@@ -233,3 +233,22 @@ export const getSingleproduct = async (req:Request,res:Response)=>{
     });
   }
 }
+
+
+
+// product search suggestions
+export const SearchController = async (req:Request, res:Response) => {
+  try {
+    const query = req.query.query as string;
+
+    // Fetch product suggestions based on the search query from your database
+    const suggestions = await productModel.find({
+      title: { $regex: new RegExp(query, "i") }, // Case-insensitive search
+    }).limit(5); // Limit the number of suggestions
+
+    res.status(200).json(suggestions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching product suggestions" });
+  }
+} 

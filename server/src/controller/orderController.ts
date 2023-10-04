@@ -11,20 +11,6 @@ export const createOrderController = async (req: Request, res: Response) => {
     // Extract other order-related data from req.body
     const { items, address } = req.body;
 
-    // Calculate the total amount based on the actual product prices
-    const amount = items.reduce((total: number, product: any) => {
-      return total + product.price * product.quantity;
-    }, 0);
-
-    const newOrder = new orderModel({
-      userid,
-      products: items,
-      amount,
-      address,
-      status: "pending",
-    });
-    await newOrder.save();
-
     // create avline_items for stripe
     const line_items = items.map((product: any) => ({
       price_data: {
@@ -40,7 +26,22 @@ export const createOrderController = async (req: Request, res: Response) => {
     // Create a checkout session using Stripe service
     const sessionId = await createCheckoutSession(line_items);
 
-    res.status(201).json({ success: true, order: newOrder, sessionId });
+    if (sessionId) {
+      // Calculate the total amount based on the actual product prices
+      const amount = items.reduce((total: number, product: any) => {
+        return total + product.price * product.quantity;
+      }, 0);
+
+      const newOrder = new orderModel({
+        userid,
+        products: items,
+        amount,
+        address,
+        status: "pending",
+      });
+      await newOrder.save();
+      res.status(201).json({ success: true, order: newOrder, sessionId });
+    }
   } catch (error) {
     console.error(error);
     res
@@ -63,16 +64,15 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     );
 
     if (!updatedOrder) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
 
     return res.status(200).json(updatedOrder);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 //deleteOrdercontroller
 export const deleteOrdercontroller = async (req: Request, res: Response) => {
@@ -92,7 +92,11 @@ export const deleteOrdercontroller = async (req: Request, res: Response) => {
 // Get user orders
 export const userOrdercontroller = async (req: Request, res: Response) => {
   try {
-    const orders = await orderModel.find({ userId: req.params.userId });
+    const { userId } = req.params;
+    const orders = await orderModel.find({ userid: userId });
+    if (!orders) {
+      res.status(401).send({ success: false, message: "no orders yet" });
+    }
     res.status(200).send({ success: true, orders });
   } catch (error) {
     console.log(error);

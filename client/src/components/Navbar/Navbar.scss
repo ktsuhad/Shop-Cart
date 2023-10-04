@@ -1,0 +1,30 @@
+// styles.scss
+
+.menu-link {
+    color: #000;
+    text-decoration: none;
+    position: relative;
+    font-size: medium;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: normal;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 100%;
+      bottom: -3px; /* Adjust the position of the underline as needed */
+      background-color: #ff3c78;
+      height: 3px; /* Adjust the height of the underline as needed */
+      transition: right 0.3s ease; /* Adjust the transition duration as needed */
+    }
+  
+    &:hover::before {
+      right: 0;
+    }
+
+    &:hover{
+      color: rgba($color: #000, $alpha: 0.4);
+    }
+  }
+  

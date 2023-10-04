@@ -11,6 +11,7 @@ import Cart from "../Pages/User/Cart/Cart";
 import Success from "../Pages/User/Payments/Success";
 import Cancel from "../Pages/User/Payments/Cancel";
 import NotFound from "../Pages/Notfound/NotFound";
+import MyOrder from "../Pages/User/MyOrder/MyOrder";
 
 const Router = () => {
   return (
@@ -27,6 +28,7 @@ const Router = () => {
 
 
       <Route path="/profile" element={<Profile/>}/>
+      <Route path="/my-orders" element={<MyOrder/>}/>
 
       <Route path="admin" element={<PrivateAdminRoute/>}>
         <Route path="adminHomepage" element={<AdminHomePage/>}/>

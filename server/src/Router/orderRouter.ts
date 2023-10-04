@@ -9,7 +9,7 @@ const app = Router();
 app.post("/", requireSignin, createOrderController); // create order
 app.put("/update-status/:orderId",requireSignin, isadmin, updateOrderStatus); //update order
 app.delete("/:Id", isadmin, deleteOrdercontroller); //delete order
-app.get("/find/:userId", requireSignin, userOrdercontroller); // Get user order
-app.get("/", requireSignin,isadmin, allOrdercontroller);   //all orders
+app.get("/:userId", requireSignin, userOrdercontroller); // Get user order
+app.get("/all-orders", requireSignin,isadmin, allOrdercontroller);   //all orders
 app.get("/income",requireSignin,isadmin,monthlyIncome)  //monthly Income
 export const orderRouter = app

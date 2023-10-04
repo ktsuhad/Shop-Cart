@@ -9,7 +9,7 @@ interface LoadingSpinnerProps {
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 24, color = "primary" }) => {
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-      <CircularProgress size={size} color={color} />
+      <CircularProgress size={size} color={color}/>
     </div>
   );
 };

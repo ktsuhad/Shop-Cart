@@ -38,7 +38,7 @@ const AdminHomePage = () => {
 
   return (
    <div className="bg-black text-white">
-     <div className="container mx-auto flex h-[100vh]">
+     <div className="container mx-auto flex min-h-screen ">
       <div className={`flex-1 bg-slate-900 text-white border-l-[20px] border-l-teal-900 ${sidebarOpen?"block" :"hidden md:block" }`}>
         <Sidebar onItemClick={handleItemClick} />
       </div>
