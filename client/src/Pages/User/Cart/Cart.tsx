@@ -10,13 +10,12 @@ const Cart = () => {
   const { items, totalPrice } = useSelector(
     (state: RootState) => state.cart
   );
-
+ //total price Without Discount
   const totalpriceWithoutDiscount: number = items.reduce(
     (acc, product) => acc + product.totalPrice,
     0
   );
-
-
+  
   return (
     <div className="flex flex-col md:flex-row container mx-auto py-5 h-screen">
       <div className="flex-[3] p-5">

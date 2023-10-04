@@ -140,6 +140,7 @@ const Search = () => {
 
 export default Search;
 
+
 function debounce(func: Function, wait: number) {
   let timeout: ReturnType<typeof setTimeout>;
   return function (...args: any[]) {

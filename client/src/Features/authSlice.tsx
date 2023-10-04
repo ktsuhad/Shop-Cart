@@ -7,14 +7,12 @@ interface AuthState {
   loading: boolean;
   user: UserInterface | null;
   isAuthenticated: boolean;
-  userId: string | null; // Add the userId field
 }
-const storedUser = localStorage.getItem("user")
+const storedUser = localStorage.getItem("user");
 const initialState: AuthState = {
   loading: false,
   user: storedUser ? JSON.parse(storedUser) : null,
   isAuthenticated: false,
-  userId:null
 };
 
 export const authSlice = createSlice({
@@ -28,8 +26,8 @@ export const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload;
       state.isAuthenticated = true;
-      
-      localStorage.setItem("user",JSON.stringify(action.payload))
+
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     loginfailure(state) {
       state.loading = true;
@@ -40,7 +38,7 @@ export const authSlice = createSlice({
 
       // Remove the access token from localStorage
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("user")
+      localStorage.removeItem("user");
     },
   },
 });

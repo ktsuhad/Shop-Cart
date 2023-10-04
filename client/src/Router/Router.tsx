@@ -26,7 +26,6 @@ const Router = () => {
       <Route path="/cancel" element={<Cancel />} />
       <Route path="*" element={<NotFound/>} />
 
-
       <Route path="/profile" element={<Profile/>}/>
       <Route path="/my-orders" element={<MyOrder/>}/>
 

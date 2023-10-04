@@ -6,7 +6,6 @@ import { OrderInteface } from "../../interfaces/OrderInterface";
 const OrderManagementPage = () => {
   const [orderss, setOrders] = useState<OrderInteface[]>([]);
 
-
   useEffect(() => {
     const fetchOrder = async () => {
       try {
@@ -18,9 +17,9 @@ const OrderManagementPage = () => {
     };
     fetchOrder();
   }, []);
-  
-//handleStatusChange
-  const handleStatusChange = async (orderId:string, newStatus:string) => {
+
+  //handleStatusChange
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
     try {
       await updateOrderStatus(orderId, newStatus);
       const response = await getAllOrders();
@@ -32,7 +31,7 @@ const OrderManagementPage = () => {
   return (
     <div className="">
       <h1 className="text-xl font-extrabold">Orders</h1>
-       <OrderListItem orders={orderss} handleStatusChange={handleStatusChange} />
+      <OrderListItem orders={orderss} handleStatusChange={handleStatusChange} />
     </div>
   );
 };

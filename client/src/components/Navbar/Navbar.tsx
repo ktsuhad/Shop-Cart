@@ -22,10 +22,7 @@ import "./Navbar.scss";
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
-  // const toggleMenu = () => {
-  //   setMenuOpen(!isMenuOpen);
-  // };
-
+  
   //dispatch
   const dispatch: AppDispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);

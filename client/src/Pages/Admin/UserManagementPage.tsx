@@ -19,9 +19,7 @@ const UserManagementPage = () => {
 
   const fetchUser = async () => {
     try {
-      const { data } = await axiosInstance.get(
-        `/all-users`
-      );
+      const { data } = await axiosInstance.get(`/all-users`);
       setUsers(data.users);
     } catch (error) {
       console.log(error);
@@ -39,10 +37,7 @@ const UserManagementPage = () => {
   //handleRolechange
   const handleRolechange = async (userId: string, role: string) => {
     try {
-      await axiosInstance.put(
-        `/update-user-role/${userId}`,
-        { role }
-      );
+      await axiosInstance.put(`/update-user-role/${userId}`, { role });
       fetchUser();
     } catch (error) {
       console.log(error);
@@ -52,9 +47,7 @@ const UserManagementPage = () => {
   //confirmDelete
   const confirmDelete = async (userId: string) => {
     try {
-      await axiosInstance.delete(
-        `/delete-user/${userId}`
-      );
+      await axiosInstance.delete(`/delete-user/${userId}`);
 
       fetchUser();
     } catch (error) {
